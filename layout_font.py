@@ -92,7 +92,7 @@ class Main_Window(QtWidgets.QWidget):
         # set the "size" application
         self.setGeometry(100, 100, 800, 600)
         self.resize(800, 600)
-        self.setWindowTitle("PyYu")
+        self.setWindowTitle("Layout and Fonts")
 
         # INFO: Testing --> create a label for testing
         self.test_label = QtWidgets.QLabel(
@@ -154,7 +154,6 @@ def main():
 
     # execute the application with `sys`
     sys.exit(app.exec())
-
 
 if __name__ == '__main__':
     main()
