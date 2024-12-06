@@ -1,5 +1,87 @@
 from PySide6 import QtCore, QtWidgets, QtGui
+import os
 import sys
+
+# create a function for our system-wide font
+def system_wide_font(font_name: str, font_size: int) -> QtGui.QFont:
+    return QtGui.QFont(font_name, font_size)
+
+# create a function for GitHub Monaspace Font
+def monaspice_radon(font_size: int = 12) -> QtGui.QFont:
+    # find the custom font in our system
+    font_path: str = "/usr/share/fonts/OTF/MonaspiceRnNerdFontMono-Regular.otf"
+    # get the font name
+    font_name = os.path.basename(font_path)
+
+    # get the ID of our custom font
+    font_id = QtGui.QFontDatabase.addApplicationFont(font_path)
+
+    # check if our custom font is loaded properly
+    if font_id != -1:
+        # NOTE: this one will be printed in the terminal
+        print(f"Successfully Loaded Custom Font '{font_name}'")
+        # add the font
+        font_family = QtGui.QFontDatabase.applicationFontFamilies(font_id)[0]
+        # allow our program to use the font
+        return QtGui.QFont(font_family, font_size)
+
+    else:
+        # if our font has not been loaded
+        print(f"\nError: {font_id} ==> Font '{font_name}' Has NOT Been Loaded")
+        print("Using Default Font\n")
+        return QtGui.QFont(system_wide_font("DejaVu Serif", 12))
+
+
+# create a function for ProggyClean Font
+def proggy_clean(font_size: int = 12) -> QtGui.QFont:
+    # find the custom font in our system
+    font_path: str = "/usr/share/fonts/TTF/ProggyCleanNerdFont-Regular.ttf"
+    # get the font name
+    font_name = os.path.basename(font_path)
+
+    # get the ID of our custom font
+    font_id = QtGui.QFontDatabase.addApplicationFont(font_path)
+
+    # check if our custom font is loaded properly
+    if font_id != -1:
+        # NOTE: this one will be printed in the terminal
+        print(f"Successfully Loaded Custom Font '{font_name}'")
+        # add the font
+        font_family = QtGui.QFontDatabase.applicationFontFamilies(font_id)[0]
+        # allow our program to use the font
+        return QtGui.QFont(font_family, font_size)
+
+    else:
+        # if our font has not been loaded
+        print(f"\nError: {font_id} ==> Font '{font_name}' Has NOT Been Loaded")
+        print("Using Default Font\n")
+        return QtGui.QFont(system_wide_font("DejaVu Serif", 12))
+
+
+# create a function for JetBrainsMono Font
+def program_font(font_size: int = 12):
+    # find the custom font in our system
+    font_path: str = "/usr/share/fonts/TTF/JetBrainsMonoNerdFontMono-Regular.ttf"
+    # get the font name
+    font_name = os.path.basename(font_path)
+
+    # get the ID of our custom font
+    font_id = QtGui.QFontDatabase.addApplicationFont(font_path)
+
+    # check if our custom font is loaded properly
+    if font_id != -1:
+        # NOTE: this one will be printed in the terminal
+        print(f"Successfully Loaded Custom Font '{font_name}'")
+        # add the font
+        font_family = QtGui.QFontDatabase.applicationFontFamilies(font_id)[0]
+        # allow our program to use the font
+        return QtGui.QFont(font_family, font_size)
+
+    else:
+        # if our font has not been loaded
+        print(f"\nError: {font_id} ==> Font '{font_name}' Has NOT Been Loaded")
+        print("Using Default Font\n")
+        return QtGui.QFont(system_wide_font("DejaVu Serif", 12))
 
 # create the main window for our program
 class Main_Window(QtWidgets.QWidget):
@@ -23,43 +105,34 @@ class Main_Window(QtWidgets.QWidget):
                 alignment = QtCore.Qt.AlignTop
             )
 
-        self.app_font_added = QtWidgets.QLabel(
+        self.proggy_font_added = QtWidgets.QLabel(
                 text = "With Proggy Clean Font",
                 alignment = QtCore.Qt.AlignBottom
             )
 
+        self.default_program_font = QtWidgets.QLabel(
+                text = "With Default Font",
+                alignment = QtCore.Qt.AlignRight
+            )
+
 
         # INFO: Testing --> system wide fonts
-        sys_wide_font = QtGui.QFont(
-                "DejaVu Serif",
-                10
-            )
-        # apply the devu system wide font to `test_label`
-        self.test_label.setFont(sys_wide_font)
+        # apply the system wide font to `test_label`
+        self.test_label.setFont(system_wide_font("DejaVu Serif", 20))
+        # self.test_label.setFont(system_wide_font("Noto Serif CJK SC", 20))
 
         # INFO: Testing --> custom - downloaded fonts
-        # find the id of the font
-        monaspice_radon_id = QtGui.QFontDatabase.addApplicationFont("/usr/share/fonts/OTF/MonaspiceRnNerdFontMono-Regular.otf")
-        # check if the font is loaded
-        if monaspice_radon_id != -1:
-            print("Successfully Loaded Font")
-            # add the font to the program
-            monaspice_radon_font_family = QtGui.QFontDatabase.applicationFontFamilies(monaspice_radon_id)[0]
-
-            # allow python program to use custom font
-            monaspice_radon_font = QtGui.QFont(monaspice_radon_font_family, 12)
-            # NOTE: apply to `no_font_added`
-            self.randon_font_added.setFont(monaspice_radon_font)
-
-        else:
-            print(f"\nError: Could not Load Font {monaspice_radon_id}\n")
+        # call the function and apply the font with default font size
+        self.randon_font_added.setFont(monaspice_radon())
+        self.proggy_font_added.setFont(proggy_clean())
 
         # INFO: Testing --> create the box layout
         self.box_layout = QtWidgets.QHBoxLayout(self)
         # place the label acksually
         self.box_layout.addWidget(self.test_label)
         self.box_layout.addWidget(self.randon_font_added)
-        self.box_layout.addWidget(self.app_font_added)
+        self.box_layout.addWidget(self.proggy_font_added)
+        self.box_layout.addWidget(self.default_program_font)
 
 
 # our main function
@@ -69,19 +142,8 @@ def main():
 
 
     # INFO: Testing --> setting a main font for everything in the app
-    proggy_clean_id = QtGui.QFontDatabase.addApplicationFont("/usr/share/fonts/TTF/ProggyCleanNerdFont-Regular.ttf")
-    # check if the font has been loaded in your mother 
-    if proggy_clean_id != -1:
-        print("Successfully Loaded Font")
-        proggy_clean_font_family = QtGui.QFontDatabase.applicationFontFamilies(proggy_clean_id)[0]
-
-        # allow python program to use custom font
-        proggy_clean_font = QtGui.QFont(proggy_clean_font_family, 16)
-
-        # set the font for the whole application
-        app.setFont(proggy_clean_font)
-    else:
-        print(f"\nError: Could not Load Font {proggy_clean_id}\n")
+    # call the function to set our "default" font for our program
+    app.setFont(program_font())
 
 
     # create an instance of the window / GUI Window
@@ -94,6 +156,6 @@ def main():
     sys.exit(app.exec())
 
 
-
 if __name__ == '__main__':
     main()
+
